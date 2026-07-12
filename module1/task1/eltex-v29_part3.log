@@ -1,0 +1,111 @@
+# 1. Перейдите в домашний каталог, создайте файл $USER_part3.log.  
+eltex-v29@eltex-2026-summer-15:37> cd ~
+eltex-v29@eltex-2026-summer-15:37> touch "$USER"_part3.log
+
+# 2. Создайте иерархию вложенных каталогов D1/D2/D3.
+eltex-v29@eltex-2026-summer-15:40> eltex-v29@eltex-2026-summer-15:40> mkdir -p D1/D2/D3 
+
+# 3. В каталоге D2 создайте обычный пустой файл file.txt.
+eltex-v29@eltex-2026-summer-15:43> eltex-v29@eltex-2026-summer-15:43> touch D1/D2/file.txt
+
+# 4. Добавьте произвольный текст в файл file.txt.
+eltex-v29@eltex-2026-summer-15:44> echo "Тестовый текст для задания" > D1/D2/file.txt 
+
+# 5. В каталоге D3 создайте символическую и жесткие ссылки на file.txt.
+eltex-v29@eltex-2026-summer-15:55> ln -s ../file.txt sym_link.txt
+eltex-v29@eltex-2026-summer-15:56> ln  ../file.txt hard_link.txt
+
+# 6. Докажите, что ссылки созданы успешно.
+eltex-v29@eltex-2026-summer-15:56> ls -al
+total 12
+drwxr-xr-x 2 eltex-v29 eltex-v29 4096 Jul  7 15:56 .
+drwxr-xr-x 3 eltex-v29 eltex-v29 4096 Jul  7 15:44 ..
+-rw-r--r-- 2 eltex-v29 eltex-v29   50 Jul  7 15:44 hard_link.txt
+lrwxrwxrwx 1 eltex-v29 eltex-v29   11 Jul  7 15:56 sym_link.txt -> ../file.txt
+
+eltex-v29@eltex-2026-summer-15:59> cd ~
+eltex-v29@eltex-2026-summer-15:59> ls -li D1/D2/file.txt D1/D2/D3/*
+1048686 -rw-r--r-- 2 eltex-v29 eltex-v29 50 Jul  7 15:44 D1/D2/D3/hard_link.txt
+1048688 lrwxrwxrwx 1 eltex-v29 eltex-v29 11 Jul  7 15:56 D1/D2/D3/sym_link.txt -> ../file.txt
+1048686 -rw-r--r-- 2 eltex-v29 eltex-v29 50 Jul  7 15:44 D1/D2/file.txt
+
+# 7. Переместите файл file.txt в каталог D1.
+eltex-v29@eltex-2026-summer-15:59> mv D1/D2/file.txt D1 
+
+# 8. Проверьте работу ранее созданных ссылок на файл file.txt. 
+#    Какая ссылка оказалась рабочей и почему?
+eltex-v29@eltex-2026-summer-16:03> cat D1/D2/D3/hard_link.txt
+Тестовый текст для задания
+eltex-v29@eltex-2026-summer-16:03> cat D1/D2/D3/sym_link.txt
+cat: D1/D2/D3/sym_link.txt: No such file or directory
+# жесткая ссылка оказалась рабочей, потому что она ссылается на inode файла, а не на его имя или путь. 
+
+# 9. Удалите каталог D2 со всем содержимым.
+eltex-v29@eltex-2026-summer-16:06> rm -rf D2 
+
+# 10. Найдите все файлы в системе размером больше 20МБ. Убедитесь в том (du), что найденные файлы имеют нужный размер. 
+#     Запишите в файл $USER_part3_gt20M.log список найденных файлов.
+eltex-v29@eltex-2026-summer-16:18> find / -type f -size +20M 2>/dev/null > "$USER"_part3_gt20M.log
+ 
+eltex-v29@eltex-2026-summer-16:24> for file in $(cat "$USER"_part3_gt20M.log); do
+>  du -sh "$file"
+> done
+31M     /usr/bin/x86_64-linux-gnu-lto-dump-12
+31M     /usr/lib/gcc/x86_64-linux-gnu/12/lto1
+32M     /usr/lib/gcc/x86_64-linux-gnu/12/cc1
+30M     /usr/lib/x86_64-linux-gnu/libicudata.so.72.1
+0       /proc/kcore
+33M     /boot/initrd.img-6.1.0-44-amd64
+33M     /boot/initrd.img-6.1.0-50-amd64
+163M    /var/log/btmp.1
+44M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-00000000000db8c9-000653f1df947936.journal
+44M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-000000000012bd18-0006541efb4e910b.journal
+43M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-000000000013b06c-000654303a1201f5.journal
+44M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-00000000000bb4ae-000653e0e464fbba.journal
+44M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-000000000011beb5-000654152c40ea73.journal
+33M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@000654e914b0fb5f-f20d94ab522960d7.journal~
+43M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-000000000014a0db-000654440c96a329.journal
+44M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-000000000008bb32-000653c297309edc.journal
+44M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-000000000006c613-000653aba9b1991f.journal
+44M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-000000000009b91d-000653cc93c81e56.journal
+44M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-00000000000fbec9-0006540279fb0af2.journal
+44M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-000000000005ca87-000653a0a37fd01e.journal
+44M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-00000000000ab4ea-000653d77c5c1149.journal
+35M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-000000000003f65c-00064d7969fad78c.journal
+44M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-000000000007c1cf-000653b69ef32fa6.journal
+44M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-000000000010c0ec-0006540b1cd179ef.journal
+43M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-000000000004d6d0-00065242b87f912a.journal
+44M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-00000000000cb658-000653e97bef6d7f.journal
+45M     /var/log/journal/8247b53b6ae84ae0ad9bb1c96113fd29/system@4f44ef78d53d4cd0a5555898b8d0015b-00000000000ebb8b-000653fa31acb7c1.journal
+39M     /var/cache/apt/srcpkgcache.bin
+39M     /var/cache/apt/pkgcache.bin
+48M     /var/lib/apt/lists/deb.debian.org_debian_dists_bookworm_main_binary-amd64_Packages
+49M     /var/lib/apt/lists/deb.debian.org_debian_dists_bookworm_main_source_Sources
+32M     /var/lib/apt/lists/deb.debian.org_debian_dists_bookworm_main_i18n_Translation-en
+
+# 11. В домашнем каталоге и его подкаталогах найдите обычные файлы, которые
+#     были изменены в течение последних 24х часов.
+eltex-v29@eltex-2026-summer-16:26> find ~ -type f -mtime -1
+/home/eltex-v29/.eltex-v29_part3.log.swp
+/home/eltex-v29/.viminfo
+/home/eltex-v29/report_part1.txt
+/home/eltex-v29/eltex-v29_part.log
+/home/eltex-v29/.log
+/home/eltex-v29/D1/file.txt
+/home/eltex-v29/eltex-v29_part3.log
+/home/eltex-v29/.bash_history
+/home/eltex-v29/.bashrc
+/home/eltex-v29/eltex-v29_part3_gt20M.log
+
+# 12. В каком каталоге находится команда find?
+eltex-v29@eltex-2026-summer-16:26> which find
+/usr/bin/find
+
+# 13. Определите характер содержимого файла find командой file.
+eltex-v29@eltex-2026-summer-16:27> file /usr/bin/find
+/usr/bin/find: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=5545a6c7162d325fbe5ffabcbfe4e5521b66ce70, for GNU/Linux 3.2.0, stripped
+
+# 14. Установите, к какому типу относятся файлы /boot/initrd.img*.
+eltex-v29@eltex-2026-summer-16:29> file /boot/initrd.img*
+/boot/initrd.img-6.1.0-44-amd64: ASCII cpio archive (SVR4 with no CRC)
+/boot/initrd.img-6.1.0-50-amd64: ASCII cpio archive (SVR4 with no CRC)
