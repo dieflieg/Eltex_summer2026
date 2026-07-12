@@ -1,0 +1,283 @@
+# 2. Установите параметры git в соответствии с вашими учетными данными:
+root@eltex-practice2-v29:~# git config --global user.name "dieflieg"
+root@eltex-practice2-v29:~# git config --global user.email "agatachris96@gmail.com"
+root@eltex-practice2-v29:~# git config --global init.defaultBranch main
+
+# 3. Установите непосредственно программу git и набор утилит для управления github из командной строки gh:
+
+root@eltex-practice2-v29:~# apt update
+Сущ:1 http://ru.archive.ubuntu.com/ubuntu noble InRelease
+Пол:2 http://ru.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]        
+Пол:3 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]         
+Пол:4 http://ru.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+Пол:5 http://ru.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1 092 kB]
+Пол:6 http://ru.archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [181 kB]
+Пол:7 http://ru.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1 660 kB]
+Пол:8 http://security.ubuntu.com/ubuntu noble-security/main amd64 Components [44,8 kB]               
+Пол:9 http://ru.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [388 kB]             
+Пол:10 http://ru.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]                     
+Пол:11 http://ru.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [5 744 B]                        
+Пол:12 http://ru.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [10,5 kB]                     
+Пол:13 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Components [76,3 kB]                        
+Получено 3 837 kB за 1с (3 382 kB/s)                                 
+Чтение списков пакетов… Готово
+Построение дерева зависимостей… Готово
+Чтение информации о состоянии… Готово         
+Может быть обновлён 81 пакет. Запустите «apt list --upgradable» для показа.
+root@eltex-practice2-v29:~# apt install git gh
+Чтение списков пакетов… Готово
+Построение дерева зависимостей… Готово
+Чтение информации о состоянии… Готово         
+Уже установлен пакет git самой новой версии (1:2.43.0-1ubuntu7.3).
+git помечен как установленный вручную.
+Следующие НОВЫЕ пакеты будут установлены:
+  gh
+Обновлено 0 пакетов, установлено 1 новых пакетов, для удаления отмечено 0 пакетов, и 81 пакетов не обновлено.
+Необходимо скачать 8 836 kB архивов.
+После данной операции объём занятого дискового пространства возрастёт на 45,4 MB.
+Хотите продолжить? [Д/н] y
+Пол:1 http://ru.archive.ubuntu.com/ubuntu noble-updates/universe amd64 gh amd64 2.45.0-1ubuntu0.3 [8 836 kB]
+Получено 8 836 kB за 1с (9 712 kB/s)
+Выбор ранее не выбранного пакета gh.
+(Чтение базы данных … на данный момент установлено 129982 файла и каталога.)
+Подготовка к распаковке …/gh_2.45.0-1ubuntu0.3_amd64.deb …
+Распаковывается gh (2.45.0-1ubuntu0.3) …
+Настраивается пакет gh (2.45.0-1ubuntu0.3) …
+Обрабатываются триггеры для man-db (2.12.0-4build2) …
+Scanning processes...                                                                                               
+Scanning linux images...                                                                                            
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+
+# 4. Создайте ключ ssh: 
+
+root@eltex-practice2-v29:~# ssh-keygen -t ed25519 -f ~/.ssh/dieflieg
+Generating public/private ed25519 key pair.
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /root/.ssh/dieflieg
+Your public key has been saved in /root/.ssh/dieflieg.pub
+The key fingerprint is:
+SHA256:MyAO+qOOgYTfmZeHdpkEPNGxhaQKRB+RZH9QEVqYFwQ root@eltex-practice2-v29
+The key's randomart image is:
++--[ED25519 256]--+
+| .o.=oEOX*.      |
+| . o.+o*+o       |
+|  o o O.o        |
+|.. + o =         |
+|o.  o   S        |
+|oo . o + =       |
+|o + + = =        |
+|.o . o o         |
+|+.               |
++----[SHA256]-----+
+
+# 5. Подключите этот комьютер к github:
+
+root@eltex-practice2-v29:~# gh auth login
+? What account do you want to log into? GitHub.com
+? What is your preferred protocol for Git operations on this host? SSH
+? Upload your SSH public key to your GitHub account? /root/.ssh/dieflieg.pub
+? Title for your SSH key: eltex-practice2-pg2026-v29
+? How would you like to authenticate GitHub CLI? Login with a web browser
+
+! First copy your one-time code: 8DBA-2DFF
+Press Enter to open github.com in your browser... 
+ 
+✓ Authentication complete.
+- gh config set -h github.com git_protocol ssh
+✓ Configured git protocol
+! Authentication credentials saved in plain text
+
+✓ Uploaded the SSH key to your GitHub account: /root/.ssh/dieflieg.pub
+✓ Logged in as dieflieg
+
+# 6. Укажите автоматическую авторизацию только для сайта github.com:
+
+root@eltex-practice2-v29:~# gh auth setup-git --hostname github.com
+
+# 7. Убедиться, что все в порядке можно командой: gh auth status
+
+root@eltex-practice2-v29:~# gh auth status
+github.com
+  ✓ Logged in to github.com account dieflieg (/root/.config/gh/hosts.yml)
+  - Active account: true
+  - Git operations protocol: ssh
+  - Token: gho_************************************
+  - Token scopes: 'admin:public_key', 'gist', 'read:org', 'repo'
+
+
+# 8. Создайте репозиторий на сервере github:
+
+root@eltex-practice2-v29:~# gh repo create --public Eltex_summer2026
+✓ Created repository dieflieg/Eltex_summer2026 on GitHub
+  https://github.com/dieflieg/Eltex_summer2026
+
+# 9. Пора наполнить его:
+
+root@eltex-practice2-v29:~# mkdir ~/Eltex_summer2026 && cd ~/Eltex_summer2026
+root@eltex-practice2-v29:~/Eltex_summer2026# echo "# краткое_описание_репозитория" >> README.md
+root@eltex-practice2-v29:~/Eltex_summer2026# git init
+Initialized empty Git repository in /root/Eltex_summer2026/.git/
+root@eltex-practice2-v29:~/Eltex_summer2026# git add README.md
+root@eltex-practice2-v29:~/Eltex_summer2026# git commit -m "first commit"
+[main (root-commit) a419ab6] first commit
+ 1 file changed, 1 insertion(+)
+ create mode 100644 README.md
+
+root@eltex-practice2-v29:~/Eltex_summer2026# git branch -M main
+root@eltex-practice2-v29:~/Eltex_summer2026# git remote add origin https://github.com/dieflieg/Eltex_summer2026.git
+
+root@eltex-practice2-v29:~/Eltex_summer2026# git status
+On branch main
+nothing to commit, working tree clean
+root@eltex-practice2-v29:~/Eltex_summer2026# git log
+commit a419ab6bd2c99fbe14f6f07dd35f2315dc4eb604 (HEAD -> main)
+Author: dieflieg <agatachris96@gmail.com>
+Date:   Sun Jul 12 18:56:54 2026 +0000
+
+    first commit
+root@eltex-practice2-v29:~/Eltex_summer2026# 
+
+root@eltex-practice2-v29:~/Eltex_summer2026# git push -u origin main
+Enumerating objects: 3, done.
+Counting objects: 100% (3/3), done.
+Delta compression using up to 2 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 263 bytes | 263.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+To https://github.com/dieflieg/Eltex_summer2026.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
+
+root@eltex-practice2-v29:~/Eltex_summer2026# mkdir -p module1/task1
+root@eltex-practice2-v29:~/Eltex_summer2026# mkdir module1/task2
+root@eltex-practice2-v29:~/Eltex_summer2026# mkdir module1/task3
+root@eltex-practice2-v29:~/Eltex_summer2026# ls -R
+.:
+module1  README.md
+
+./module1:
+task1  task2  task3
+
+./module1/task1:
+
+./module1/task2:
+
+./module1/task3:
+
+eltex-v29@eltex-2026-summer-02:09> scp eltex-v29_part* root@172.16.9.203:/root/Eltex_summer2026/module1/task1/
+eltex-v29_part3_gt20M.log                                                         100% 3025   197.5KB/s   00:00    
+eltex-v29_part3.log                                                               100% 7794   415.4KB/s   00:00    
+eltex-v29_part.log                                                                100% 8025     1.2MB/s   00:00    
+eltex-v29@eltex-2026-summer-02:15> 
+
+root@eltex-practice2-v29:~/Eltex_summer2026# git add .
+root@eltex-practice2-v29:~/Eltex_summer2026# git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   module1/task1/eltex-v29_part.log
+        new file:   module1/task1/eltex-v29_part3.log
+        new file:   module1/task1/eltex-v29_part3_gt20M.log
+
+root@eltex-practice2-v29:~/Eltex_summer2026# git commit -m "add first logs"
+[main ff5c17f] add first logs
+ 3 files changed, 386 insertions(+)
+ create mode 100644 module1/task1/eltex-v29_part.log
+ create mode 100644 module1/task1/eltex-v29_part3.log
+ create mode 100644 module1/task1/eltex-v29_part3_gt20M.log
+root@eltex-practice2-v29:~/Eltex_summer2026# git push
+Enumerating objects: 8, done.
+Counting objects: 100% (8/8), done.
+Delta compression using up to 2 threads
+Compressing objects: 100% (6/6), done.
+Writing objects: 100% (7/7), 5.70 KiB | 5.70 MiB/s, done.
+Total 7 (delta 0), reused 0 (delta 0), pack-reused 0
+To https://github.com/dieflieg/Eltex_summer2026.git
+   a419ab6..ff5c17f  main -> main
+
+# 10. Клонируйте ваш репозиторий:
+
+root@eltex-practice2-v29:~/Eltex_summer2026# cd ..
+root@eltex-practice2-v29:~# mkdir ~/Eltex_summer2026_clone && cd ~/Eltex_summer2026_clone
+root@eltex-practice2-v29:~/Eltex_summer2026_clone# git clone https://github.com/dieflieg/Eltex_summer2026
+Cloning into 'Eltex_summer2026'...
+remote: Enumerating objects: 10, done.
+remote: Counting objects: 100% (10/10), done.
+remote: Compressing objects: 100% (8/8), done.
+remote: Total 10 (delta 0), reused 10 (delta 0), pack-reused 0 (from 0)
+Receiving objects: 100% (10/10), 5.92 KiB | 5.92 MiB/s, done.
+root@eltex-practice2-v29:~/Eltex_summer2026_clone# 
+
+# 11. Внесите изменение в основном каталоге, не забыв про git add/commit/push, выполните в каталоге с клоном: 
+
+# Изменения
+root@eltex-practice2-v29:~# cd Eltex_summer2026
+root@eltex-practice2-v29:~/Eltex_summer2026# git add .
+root@eltex-practice2-v29:~/Eltex_summer2026# git commit -m "Добавление даты в MD"
+[main 926059f] Добавление даты в MD
+ 1 file changed, 2 insertions(+)
+root@eltex-practice2-v29:~/Eltex_summer2026# git push
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 2 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 408 bytes | 408.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+To https://github.com/dieflieg/Eltex_summer2026.git
+   ff5c17f..926059f  main -> main
+
+# Проверка
+root@eltex-practice2-v29:~/Eltex_summer2026_clone# cd Eltex_summer2026/
+root@eltex-practice2-v29:~/Eltex_summer2026_clone/Eltex_summer2026# git fetch 
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0 (from 0)
+Unpacking objects: 100% (3/3), 388 bytes | 388.00 KiB/s, done.
+From https://github.com/dieflieg/Eltex_summer2026
+   ff5c17f..926059f  main       -> origin/main
+root@eltex-practice2-v29:~/Eltex_summer2026_clone/Eltex_summer2026# git log origin/main
+commit 926059fdf100ad434e612968cc5c30906844f994 (origin/main, origin/HEAD)
+Author: dieflieg <agatachris96@gmail.com>
+Date:   Sun Jul 12 19:22:04 2026 +0000
+
+    Добавление даты в MD
+
+commit ff5c17fb2228b6728c31979aed8ba038f4c09918 (HEAD -> main)
+Author: dieflieg <agatachris96@gmail.com>
+Date:   Sun Jul 12 19:17:08 2026 +0000
+
+    add first logs
+
+commit a419ab6bd2c99fbe14f6f07dd35f2315dc4eb604
+Author: dieflieg <agatachris96@gmail.com>
+Date:   Sun Jul 12 18:56:54 2026 +0000
+
+    first commit
+root@eltex-practice2-v29:~/Eltex_summer2026_clone/Eltex_summer2026# git diff main origin/main
+diff --git a/README.md b/README.md
+index aadab5e..2d29716 100644
+--- a/README.md
++++ b/README.md
+@@ -1 +1,3 @@
+ # краткое_описание_репозитория
++
++Дата последнего обновления: 13.07.26
+root@eltex-practice2-v29:~/Eltex_summer2026_clone/Eltex_summer2026# git pull 
+Updating ff5c17f..926059f
+Fast-forward
+ README.md | 2 ++
+ 1 file changed, 2 insertions(+)
+
