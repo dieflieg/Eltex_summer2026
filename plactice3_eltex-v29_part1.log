@@ -1,0 +1,216 @@
+# 1. Войдите под пользователем user1 из практики 2 (su - user1)
+
+root@eltex-practice2-v29:~# su user1
+Warning: your password will expire in 3 days.
+user1@eltex-practice2-v29:/root$
+
+
+# 2. Подсчитайте количество процессов, имеющих несколько потоков выполнения
+
+user1@eltex-practice2-v29:/root$ ps -eL | awk '{print $1}' | uniq -c | awk '$1 > 1' | wc -l
+10
+
+# здесь "ps -eL" - вывод инфомации о всех потоках
+user1@eltex-practice2-v29:/root$ ps -eL
+    PID     LWP TTY          TIME CMD
+      1       1 ?        00:00:07 systemd
+      2       2 ?        00:00:00 kthreadd
+      3       3 ?        00:00:00 pool_workqueue_release
+      4       4 ?        00:00:00 kworker/R-rcu_g
+      5       5 ?        00:00:00 kworker/R-rcu_p
+
+
+user1@eltex-practice2-v29:/root$ ps -eL | awk '{print $1}'
+PID
+1
+2
+3
+4
+5
+
+# подсчет количества совпадений
+user1@eltex-practice2-v29:/root$ ps -eL | awk '{print $1}' | uniq -c
+      1 PID
+      1 1
+      1 2
+      1 3
+      1 4
+      1 5
+
+# вывести, если совпадений > 1
+user1@eltex-practice2-v29:/root$ ps -eL | awk '{print $1}' | uniq -c | awk '$1 > 1'
+      7 352
+      2 555
+      4 708
+      2 709
+      6 716
+      4 744
+      2 752
+      4 762
+      4 953
+      6 4173
+
+
+# 3. Запустите top и настройте вывод полей с информацией о процессе 
+#    следующим образом:
+#	* удалите поля VIRT, RES, SHR;
+#	* добавьте поле RUSER и сделайте так, чтобы это поле было
+#	показано после поля USER;
+
+# После входа в top
+# нажимаем клавишу f
+# кнопками d или пробел выбираем стобцы для удаления из панели отображения
+# для сортировки захватываем нужный параметр кнопкой s
+# после чего с помощью стрелки вправо выбираем этот элемент и перемещаем
+# на нужное место
+# выход из режима сортировки осуществляем кнопкой влево
+# выход из режима редактирования панели отображения осуществляем на q
+
+top - 15:39:04 up 6 days, 28 min,  1 user,  load average: 0,00, 0,00, 0,00
+Tasks: 109 total,   1 running, 108 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0,0 us,  0,0 sy,  0,0 ni,100,0 id,  0,0 wa,  0,0 hi,  0,0 si,  0,0 st
+MiB Mem :   3915,9 total,   2588,9 free,    516,0 used,   1096,1 buff/cache
+MiB Swap:   3185,0 total,   3185,0 free,      0,0 used.   3399,8 avail Mem
+
+    PID USER     RUSER     PR  NI S  %CPU  %MEM     TIME+ COMMAND
+  20855 user1    user1     20   0 S   0,0   0,1   0:00.00 bash
+  20944 user1    user1     20   0 R   0,3   0,2   0:00.12 top
+    555 systemd+ systemd+  20   0 S   0,0   0,2   0:01.08 systemd-timesyn
+    554 systemd+ systemd+  20   0 S   0,0   0,3   0:00.55 systemd-resolve
+    550 systemd+ systemd+  20   0 S   0,0   0,2   0:06.93 systemd-network
+    744 syslog   syslog    20   0 S   0,0   0,2   0:00.26 rsyslogd
+      1 root     root      20   0 S   0,0   0,3   0:07.46 systemd
+      2 root     root      20   0 S   0,0   0,0   0:00.04 kthreadd
+      3 root     root      20   0 S   0,0   0,0   0:00.00 pool_workqueue_release
+
+
+# 4. В другом терминальном окне выполните команду passwd и оставьте ее 
+#    в состоянии запроса текущего пароля
+
+root@eltex-practice2-v29:~# su user1
+Warning: your password will expire in 3 days.
+user1@eltex-practice2-v29:/root$ passwd
+Changing password for user1.
+Current password:
+
+
+# 5. Перейдите в терминальное окно с top и выполните следующие действия:
+#	* выведите все процессы, для которых реальным пользователем
+#      	  является пользователь, которым вы вошли в сеанс;
+#	* найдите процесс, запущенный командой passwd;
+#	* отправьте этому процессу сигналы 15 (SIGTERM), 2 (SIGINT),
+#         3 (SIGQUIT), 9(SIGKILL)
+
+# после запуска top нажмем кнопку U для возможности поиска пользователя
+
+top - 15:52:45 up 6 days, 42 min,  2 users,  load average: 0,00, 0,00, 0,00
+Tasks: 114 total,   1 running, 113 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0,0 us,  0,0 sy,  0,0 ni, 97,8 id,  2,2 wa,  0,0 hi,  0,0 si,  0,0 st
+MiB Mem :   3915,9 total,   2578,2 free,    526,7 used,   1096,2 buff/cache
+MiB Swap:   3185,0 total,   3185,0 free,      0,0 used.   3389,2 avail Mem
+
+    PID USER     RUSER     PR  NI S  %CPU  %MEM     TIME+ COMMAND
+  21090 root     user1     20   0 S   0,0   0,1   0:00.00 passwd
+
+# поскольку top по умолчанию фильтрует процессы по эффективному пользователю,
+# определяющему привилегии выполнения, для процесса passwd таковым является root.
+
+user1@eltex-practice2-v29:/root$ kill -15 21090
+user1@eltex-practice2-v29:/root$ ps aux | grep "21090"
+root       21090  0.0  0.0   9176  3900 pts/1    S+   15:51   0:00 passwd
+
+user1@eltex-practice2-v29:/root$ kill -2 21090
+user1@eltex-practice2-v29:/root$ ps aux | grep "21090"
+root       21090  0.0  0.0   9176  3900 pts/1    S+   15:51   0:00 passwd
+
+user1@eltex-practice2-v29:/root$ kill -3 21090
+user1@eltex-practice2-v29:/root$ ps aux | grep "21090"
+root       21090  0.0  0.0   9176  3900 pts/1    S+   15:51   0:00 passwd
+
+user1@eltex-practice2-v29:/root$ kill -9 21090
+user1@eltex-practice2-v29:/root$ ps aux | grep "21090"
+
+# в окне вызова passwd видим следующее:
+user1@eltex-practice2-v29:/root$ passwd
+Changing password for user1.
+Current password: Killed
+
+# Видим, что процесс не отреанировал на все более
+# вежливые сигналы и был остановлен только после
+# отправки сигнала, который обрабатывается ядром
+# напрямую.
+
+# 6. Выполните команду vim ~/file_task3.txt и нажмите Ctrl-Z
+
+user1@eltex-practice2-v29:/root$ vim ~/file_task3.txt
+# Ctrl-Z
+[1]+  Stopped                 vim ~/file_task3.txt
+
+
+# 7. Выполните команду sleep 600, нажмите Ctrl-Z и выполните команду jobs
+
+user1@eltex-practice2-v29:/root$ sleep 600
+# Ctrl-Z
+[2]+  Stopped                 sleep 600
+user1@eltex-practice2-v29:/root$ jobs
+[1]-  Stopped                 vim ~/file_task3.txt
+[2]+  Stopped                 sleep 600
+
+
+# 8. Последнее задание (sleep 600) сделайте фоновым
+user1@eltex-practice2-v29:/root$ bg %2
+[2]+ sleep 600 &
+
+# 9. Измените число NICE у задания (sleep 600), сделав его равным 10
+
+user1@eltex-practice2-v29:/root$ jobs -l
+[1]+ 21122 Stopped                 vim ~/file_task3.txt
+[2]- 21124 Running                 sleep 600 &
+user1@eltex-practice2-v29:/root$ renice 10 21124
+21124 (process ID) old priority 0, new priority 10
+
+
+# 10. Проверьте, что число NICE у этого задания изменилось
+# рассмотрим через top
+top - 16:10:23 up 6 days,  1:00,  2 users,  load average: 0,00, 0,00, 0,00
+Tasks: 117 total,   1 running, 115 sleeping,   1 stopped,   0 zombie
+%Cpu(s):  0,0 us,  0,2 sy,  0,0 ni, 99,8 id,  0,0 wa,  0,0 hi,  0,0 si,  0,0 st
+MiB Mem :   3915,9 total,   2582,1 free,    519,1 used,   1099,9 buff/cache
+MiB Swap:   3185,0 total,   3185,0 free,      0,0 used.   3396,8 avail Mem
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+  20855 user1     20   0    8660   5528   3900 S   0,0   0,1   0:00.02 bash
+  21069 user1     20   0    8660   5552   3924 S   0,0   0,1   0:00.00 bash
+  21122 user1     20   0   25292  13636   8292 T   0,0   0,3   0:00.01 vim
+  21124 user1     30  10    5688   2176   2068 S   0,0   0,1   0:00.00 sleep
+  21127 user1     20   0   11976   6096   3828 R   0,0   0,2   0:00.02 top
+
+
+# 11. Сделайте задание vim ~/file_ task3.txt активным и выйдите из редактора
+
+user1@eltex-practice2-v29:/root$ fg %1
+vim ~/file_task3.txt
+# Для выхода из vim нажмем esc для выхода из режима редактирования
+# далее :q!, т.к нам не нужно сохранять файл.
+
+
+# 12. Отправьте сигнал 15 (SIGTERM) заданию sleep 600 и выполните команду 
+#     jobs
+
+user1@eltex-practice2-v29:/root$ kill -15 %2
+user1@eltex-practice2-v29:/root$ jobs
+[2]+  Terminated              sleep 600
+
+
+# 13. Создайте перехватчик сигналов SIGINT и SIGQUIT внутри командного 
+#     интерпретатора, который выводит сообщение «Меня голыми руками не 
+#     возьмёшь!» (используйте встроенную команду trap) и отправьте сигналы 
+#     самому себе 
+
+user1@eltex-practice2-v29:/root$ trap 'echo "Меня голыми руками не возьмёшь!"' SIGINT SIGQUIT
+
+user1@eltex-practice2-v29:/root$ kill -SIGINT $$
+Меня голыми руками не возьмёшь!
+
+user1@eltex-practice2-v29:/root$ kill -SIGQUIT $$
+Меня голыми руками не возьмёшь!
