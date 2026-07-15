@@ -214,3 +214,4 @@ user1@eltex-practice2-v29:/root$ kill -SIGINT $$
 
 user1@eltex-practice2-v29:/root$ kill -SIGQUIT $$
 Меня голыми руками не возьмёшь!
+ 
